@@ -24,7 +24,7 @@ export class AuthService {
             throw new HttpException('User with this email already exists', HttpStatus.BAD_REQUEST);
         }
 
-        const hashPassword = await bcrypt.hash(userDto.password, 5);
+        const hashPassword = await bcrypt.hash(userDto.password, 10);
         const user = await this.userService.createUser({...userDto, password: hashPassword});
 
         return this.generateToken(user);
@@ -46,6 +46,10 @@ export class AuthService {
 
       if (!user) {
           throw new UnauthorizedException({message: 'Not correct email or password'});
+      }
+
+      if (user.banned) {
+          throw new UnauthorizedException({message: 'User is banned'});
       }
 
       const passwordEquals = await bcrypt.compare(userDto.password, user.password);
