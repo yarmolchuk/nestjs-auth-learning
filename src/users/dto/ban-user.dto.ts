@@ -5,6 +5,5 @@ export class BanUserDto {
     readonly userId: number;
 
     @IsString({message: 'Ban reason must be a string'})
-    @IsOptional()
-    readonly banReason?: string;
+    readonly banReason: string;
 }
